@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Notebook</title>
+  </head>
+  <body>
+    <div align='center'>
+      <h1> Notebook </h1>
+        <form method="post">
+            {% csrf_token %}
+            {% for note in notes_list %}
+                <h2>{{ note.title }}</h2>
+                <p>{{ note.text }}</p>
+            {% endfor %}
+            {{ form.as_p }}
+            <input type="submit">
+        </form>
+    </div>
+  </body>
+</html>

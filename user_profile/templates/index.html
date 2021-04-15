@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Title </title>
+  </head>
+  <body>
+    <div align="center">
+      <h1> Welcome, {{user.username}} </h1>
+      <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          {% if isIndexPage %}
+              <input type="submit">
+          {% endif %}
+          {% for note in notes %}
+              <h2>{{ note.title }}</h2>
+              <p>{{ note.text }}</p>
+          {% endfor %}
+      </form>
+    </div>
+  </body>
+</html>
