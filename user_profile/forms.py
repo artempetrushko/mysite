@@ -1,12 +1,19 @@
 from django import forms
-from django.forms import CharField
-from .models import Registration
+from django.contrib.auth.models import User
 
 
 class RegistrationForm(forms.ModelForm):
-    username = forms.CharField(min_length=5, max_length=15, required=True, widget=forms.TextInput(attrs={'placeholder': 'Имя пользователя'}))
-    password = forms.CharField(min_length=8, max_length=15, required=True, widget=forms.TextInput(attrs={'placeholder': 'Пароль'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
     class Meta:
-        model = Registration
+        model = User
         fields = ['username', 'password']
+
+    def save(self, commit=True):
+        username = self.cleaned_data['username']
+        password = self.cleaned_data['password']
+        user = User.objects.create_user(username, '', password)
+        if commit:
+            user.save()
+        return user

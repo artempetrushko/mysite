@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Title </title>
-  </head>
-  <body>
-    <div align="center">
-      <h1> Welcome, {{user.username}} </h1>
-      <form method="post">
-          {% csrf_token %}
-          {{ form.as_p }}
-          {% if isIndexPage %}
-              <input type="submit">
-          {% endif %}
-          {% for note in notes %}
-              <h2>{{ note.title }}</h2>
-              <p>{{ note.text }}</p>
-          {% endfor %}
-      </form>
-    </div>
-  </body>
+    <script>
+        async function callClick() {
+            let response = await fetch('http://localhost:8000/click/', {
+                method: 'GET'
+            });
+            let answer = await response.json();
+            document.getElementById("data").innerHTML = answer
+        }
+    </script>
+    <head>
+        <meta charset="utf-8">
+        <title>Title </title>
+    </head>
+    <body>
+        <div align="center">
+            <h1> Welcome, {{user.username}} </h1>
+            <h2> You have <div id="data">{{ mainCycle.coinsCount }}</div>coins!</h2>
+            <button onclick="callClick()"><h1>Click me!</h1></button>
+        </div>
+    </body>
 </html>

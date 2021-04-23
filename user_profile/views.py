@@ -1,16 +1,18 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponse
 from .forms import RegistrationForm
+from .models import MainCycle
 from notebook.forms import NoteForm
 from notebook.models import Note
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserDetailSerializer
 from rest_framework import generics
 
 
 class UserView(generics.RetrieveAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserDetailSerializer
 
 
 class UserViewSet(generics.ListAPIView):
@@ -18,15 +20,19 @@ class UserViewSet(generics.ListAPIView):
     serializer_class = UserSerializer
 
 
+def callClick(request):
+    user = User.objects.filter(id=request.user.id)
+    mainCycle = MainCycle.objects.filter(user=request.user)[0]
+    mainCycle.Click()
+    mainCycle.save()
+    return HttpResponse(mainCycle.coinsCount)
+
+
 def index(request):
     user = User.objects.filter(id=request.user.id)
     if len(user) != 0:
-        notes = Note.objects.all()
-        form = NoteForm(request.POST)
-        if form.is_valid():
-            new_note = form.save(commit=False)
-            new_note.save()
-        return render(request, 'index.html', {'user': user[0], 'notes': notes, 'form': form, 'isIndexPage': True})
+        mainCycle = MainCycle.objects.filter(user=request.user)[0]
+        return render(request, 'index.html', {'user': user[0], 'mainCycle': mainCycle})
     else:
         return redirect('login')
 
@@ -60,6 +66,9 @@ def user_registration(request):
                 password = request.POST["password"]
                 user = User.objects.create_user(username, '', password)
                 user.save()
+                mainCycle = MainCycle()
+                mainCycle.user = user
+                mainCycle.save()
                 user = authenticate(request, username=username, password=password)
                 login(request, user)
                 return render(request, 'index.html', {'user': user})
