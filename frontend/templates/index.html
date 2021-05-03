@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <script src="{% static 'js/index.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <meta charset="utf-8">
+        <title>Title </title>
+    </head>
+    <body onload="getUser({{ user.id }})">
+        <main>
+            <div align="center">
+                <h1> Welcome, <div id="user">{{ user.username }}!</div></h1>
+                <div class="logout"><a href="/logout">LOGOUT</a></div>
+                <h3>Your click power is <div id="clickPower">{{ mainCycle.clickPower }}</div></h3>
+                <h3> You have <div id="data">{{ mainCycle.coinsCount }}</div>coins!</h3>
+                <input type="image" class="money" src="{% static 'images/money.png' %}" onclick="callClick()">
+                <input type="image" class="money boost" src="{% static 'images/money boost.png' %}" onclick="buyBoost()">
+            </div>
+        </main>
+    </body>
+</html>

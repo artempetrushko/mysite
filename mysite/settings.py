@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'user_profile',
     'notebook',
     'rest_framework',
+    'frontend',
 ]
 
 MIDDLEWARE = [

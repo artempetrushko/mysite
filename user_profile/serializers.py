@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from .models import User, MainCycle
 from rest_framework import serializers
 
 
@@ -11,6 +11,18 @@ class UserSerializer(serializers.ModelSerializer):
 class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username']
+        fields = ['id', 'username', 'cycle']
+
+
+class CycleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MainCycle
+        fields = ['id']
+
+
+class CycleDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MainCycle
+        fields = ['id', 'user', 'coinsCount', 'clickPower', 'boosts']
 
 
