@@ -1,0 +1,13 @@
+.money, .boost {
+    width: 250px;
+    height: 200px;
+    opacity: 0.8;
+}
+
+.money:hover, .boost:hover {
+    opacity: 0.9;
+}
+
+.money:active, .boost:active {
+    opacity: 1;
+}
