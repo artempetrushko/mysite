@@ -15,7 +15,7 @@ async function getUser(id){
     let getCycle = await fetch('http://localhost:8000/cycles/' + answer['cycle'],{
         method: 'GET'
     });
-    let cycle = getCycle.json();
+    let cycle = await getCycle.json();
     document.getElementById("data").innerHTML = cycle['coinsCount'];
 }
 
@@ -23,6 +23,6 @@ async function buyBoost(){
     let response = await fetch('http://localhost:8000/buyBoost',{
         method: 'GET'
     });
-    let answer = response.json();
-    document.getElementById("clickPower").innerHTML = answer['clickPower'];
+    let answer = await response.json();
+    document.getElementById("clickPower").innerHTML = answer;
 }

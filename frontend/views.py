@@ -12,7 +12,7 @@ def index(request):
         mainCycle = MainCycle.objects.filter(user=request.user)[0]
         return render(request, 'index.html', {'user': user[0], 'mainCycle': mainCycle})
     else:
-        return redirect(login)
+        return redirect('login')
 
 
 def user_login(request):
@@ -42,10 +42,10 @@ def user_registration(request):
             mainCycle.save()
             user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
             login(request, user)
-            return redirect('index')
+            return redirect(index)
         else:
             return render(request, 'registration.html', {'form': form, 'invalid': True})
 
     else:
         form = RegistrationForm()
-        return render((request, 'registration.html', {'invalid': True, 'form': form}))
+        return render(request, 'registration.html', {'invalid': True, 'form': form})
