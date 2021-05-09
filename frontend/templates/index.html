@@ -15,8 +15,10 @@
                 <div class="logout"><a href="/logout">LOGOUT</a></div>
                 <h3>Your click power is <div id="clickPower">{{ mainCycle.clickPower }}</div></h3>
                 <h3> You have <div id="data">%coins%</div>coins!</h3>
-                <input type="image" class="money" src="{% static 'images/money.png' %}" onclick="callClick()">
-                <input type="image" class="money boost" src="{% static 'images/money boost.png' %}" onclick="buyBoost()">
+                <div class="activities">
+                    <input type="image" class="money" src="{% static 'images/money.png' %}" onclick="callClick()">
+                    <input type="image" class="money boost" src="{% static 'images/money boost.png' %}" onclick="buyBoost()">
+                </div>
             </div>
         </main>
     </body>

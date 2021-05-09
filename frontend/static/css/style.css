@@ -11,3 +11,22 @@
 .money:active, .boost:active {
     opacity: 1;
 }
+
+.activities {
+    display: inline;
+}
+
+.boost-container {
+    display: inline;
+}
+
+.boost-buttons {
+    display: inline;
+}
+
+.activities {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    position: relative;
+}

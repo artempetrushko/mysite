@@ -20,9 +20,14 @@ async function getUser(id){
 }
 
 async function buyBoost(){
-    let response = await fetch('http://localhost:8000/buyBoost',{
+    let buyBoost_response = await fetch('http://localhost:8000/buyBoost',{
         method: 'GET'
     });
-    let answer = await response.json();
-    document.getElementById("clickPower").innerHTML = answer;
+    let clickPower = await buyBoost_response.json();
+    document.getElementById("clickPower").innerHTML = clickPower;
+    let payForBoost_response = await fetch('http://localhost:8000/payForBoost', {
+        method: 'GET'
+    });
+    let coinsCount = await payForBoost_response.json();
+    document.getElementById("data").innerHTML = coinsCount;
 }

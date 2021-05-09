@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from .models import MainCycle, Boost
-from .serializers import UserSerializer, UserDetailSerializer, CycleSerializer, CycleDetailSerializer
+from .serializers import UserSerializer, UserDetailSerializer, CycleSerializer, CycleDetailSerializer, BoostSerializer,\
+    BoostSerializerDetail
 from rest_framework import generics
 
 
@@ -25,6 +26,16 @@ class CycleDetail(generics.RetrieveAPIView):
     serializer_class = CycleDetailSerializer
 
 
+class BoostList(generics.ListAPIView):
+    queryset = Boost.objects.all()
+    serializer_class = BoostSerializer
+
+
+class BoostDetail(generics.RetrieveAPIView):
+    queryset = Boost.objects.all()
+    serializer_class = BoostSerializerDetail
+
+
 def callClick(request):
     mainCycle = MainCycle.objects.filter(user=request.user)[0]
     mainCycle.Click()
@@ -34,10 +45,23 @@ def callClick(request):
 
 def buyBoost(request):
     mainCycle = MainCycle.objects.filter(user=request.user)[0]
-    boost = Boost()
+    boosts = Boost.objects.filter(mainCycle=mainCycle)
+    if boosts.count() == 0:
+        boost = Boost()
+        boost.mainCycle = mainCycle
+        boost.save()
+        boost.Upgrade()
+        mainCycle.save()
+        return HttpResponse(mainCycle.clickPower)
+    boost = boosts[0]
     boost.mainCycle = mainCycle
-    boost.save()
     boost.Upgrade()
     mainCycle.save()
+    boost.save()
     return HttpResponse(mainCycle.clickPower)
+
+
+def payForBoost(request):
+    mainCycle = MainCycle.objects.filter(user=request.user)[0]
+    return HttpResponse(mainCycle.coinsCount)
 

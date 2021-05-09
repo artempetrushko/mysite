@@ -1,4 +1,4 @@
-from .models import User, MainCycle
+from .models import User, MainCycle, Boost
 from rest_framework import serializers
 
 
@@ -25,4 +25,15 @@ class CycleDetailSerializer(serializers.ModelSerializer):
         model = MainCycle
         fields = ['id', 'user', 'coinsCount', 'clickPower', 'boosts']
 
+
+class BoostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Boost
+        fields = ['id', 'mainCycle']
+
+
+class BoostSerializerDetail(serializers.ModelSerializer):
+    class Meta:
+        model = Boost
+        fields = ['id', 'boostNumber', 'mainCycle', 'level', 'power', 'price']
 

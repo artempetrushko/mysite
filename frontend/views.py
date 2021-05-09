@@ -48,4 +48,4 @@ def user_registration(request):
 
     else:
         form = RegistrationForm()
-        return render(request, 'registration.html', {'invalid': True, 'form': form})
+        return render(request, 'registration.html', {'invalid': False, 'form': form})
