@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from .models import MainCycle, Boost
-from .serializers import UserSerializer, UserDetailSerializer, CycleSerializer, CycleDetailSerializer, BoostSerializer,\
-    BoostSerializerDetail
+from .serializers import UserSerializer, UserDetailSerializer, CycleSerializer, CycleDetailSerializer, BoostSerializer
 from rest_framework import generics
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+import services
 
 
 class UserDetail(generics.RetrieveAPIView):
@@ -30,38 +31,23 @@ class BoostList(generics.ListAPIView):
     queryset = Boost.objects.all()
     serializer_class = BoostSerializer
 
-
-class BoostDetail(generics.RetrieveAPIView):
-    queryset = Boost.objects.all()
-    serializer_class = BoostSerializerDetail
+    def get_queryset(self):
+        return Boost.objects.filter(mainCycle=self.kwargs['mainCycle'])
 
 
-def callClick(request):
-    mainCycle = MainCycle.objects.filter(user=request.user)[0]
-    mainCycle.Click()
-    mainCycle.save()
-    return HttpResponse(mainCycle.coinsCount)
+@api_view(['GET'])
+def call_click(request):
+    data = services.clicker_services.call_click(request)
+    return Response(data)
 
 
-def buyBoost(request):
-    mainCycle = MainCycle.objects.filter(user=request.user)[0]
-    boosts = Boost.objects.filter(mainCycle=mainCycle)
-    if boosts.count() == 0:
-        boost = Boost()
-        boost.mainCycle = mainCycle
-        boost.save()
-        boost.Upgrade()
-        mainCycle.save()
-        return HttpResponse(mainCycle.clickPower)
-    boost = boosts[0]
-    boost.mainCycle = mainCycle
-    boost.Upgrade()
-    mainCycle.save()
-    boost.save()
-    return HttpResponse(mainCycle.clickPower)
+@api_view(['POST'])
+def buy_boost(request):
+    clickPower, coinsCount, level, price, power = services.clicker_services.buy_boost(request)
+    return Response({'clickPower': clickPower,
+                     'coinsCount': coinsCount,
+                     'level': level,
+                     'price': price,
+                     'power': power})
 
-
-def payForBoost(request):
-    mainCycle = MainCycle.objects.filter(user=request.user)[0]
-    return HttpResponse(mainCycle.coinsCount)
 

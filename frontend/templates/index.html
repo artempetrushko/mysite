@@ -13,11 +13,16 @@
             <div align="center">
                 <h1> Welcome, <div id="user">%user%</div></h1>
                 <div class="logout"><a href="/logout">LOGOUT</a></div>
-                <h3>Your click power is <div id="clickPower">{{ mainCycle.clickPower }}</div></h3>
+                <h3>Your click power is <div id="clickPower">%clickPower%</div></h3>
                 <h3> You have <div id="data">%coins%</div>coins!</h3>
-                <div class="activities">
-                    <input type="image" class="money" src="{% static 'images/money.png' %}" onclick="callClick()">
-                    <input type="image" class="money boost" src="{% static 'images/money boost.png' %}" onclick="buyBoost()">
+                <input type="image" class="money" src="{% static 'images/money.png' %}" onclick="callClick()">
+                <div class="boost-wrapper" id="boost-wrapper">
+                    <div class="boost-holder" id="boost-holder">
+                        <input type="image" class="money boost" src="{% static 'images/money boost.png' %}" onclick="buyBoost(0)">
+                        <p> Level: <div id="boostLevel"> </div></p>
+                        <p> Power: <div id="boostPower"> </div></p>
+                        <p> Price: <div id="boostPrice"> </div></p>
+                    </div>
                 </div>
             </div>
         </main>
