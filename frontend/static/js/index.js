@@ -1,13 +1,3 @@
-async function callClick() {
-    let response = await fetch('/click/', {
-        method: 'GET'
-    });
-    let answer = await response.json();
-    document.getElementById("data").innerHTML = answer.coinsCount;
-    if (answer.boosts)
-        renderAllBoosts(answer.boosts);
-}
-
 async function getUser(id){
     let response = await fetch('/users/' + id, {
         method: 'GET'
@@ -25,10 +15,22 @@ async function getUser(id){
     });
     let boosts = await boostRequest.json();
     renderAllBoosts(boosts);
+    checkPrices();
+}
+
+async function callClick() {
+    let response = await fetch('/click/', {
+        method: 'GET'
+    });
+    let answer = await response.json();
+    document.getElementById("data").innerHTML = answer.coinsCount;
+    if (answer.boosts)
+        renderAllBoosts(answer.boosts);
+    checkPrices();
 }
 
 function buyBoost(boost_level){
-    const csrftoken = getCookie('csrftoken')
+    const csrftoken = getCookie('csrftoken');
     fetch('/buyBoost/', {
         method: 'POST',
         headers: {
@@ -46,11 +48,25 @@ function buyBoost(boost_level){
         }
     }).then(data => {
         document.getElementById("data").innerHTML = data['coinsCount'];
-        document.getElementById(`clickPower_${boost.level}`).innerHTML = data['clickPower'];
-        document.getElementById(`boostLevel_${boost.level}`).innerHTML = data['level'];
-        document.getElementById(`boostPrice_${boost.level}`).innerHTML = data['price'];
-        document.getElementById(`boostPower_${boost.level}`).innerHTML = data['power'];
-    })
+        document.getElementById("clickPower").innerHTML = data['clickPower'];
+        document.getElementById(`boostLevel_${boost_level}`).innerHTML = data['level'];
+        document.getElementById(`boostPrice_${boost_level}`).innerHTML = data['price'];
+        document.getElementById(`boostPower_${boost_level}`).innerHTML = data['power'];
+        checkPrices();
+    });
+}
+
+function checkPrices() {
+    let coinsCount = parseInt(document.getElementById("data").innerHTML);
+    let boosts = document.getElementsByClassName("boost-holder");
+    for (let i = 0; i < boosts.length; i++) {
+        let button = boosts[i].getElementsByClassName("money boost")[0];
+        if (parseInt(boosts[i].getElementsByClassName("boostPrice")[0].innerHTML) > coinsCount) {
+            button.setAttribute("disabled", "disabled");
+        } else {
+            button.removeAttribute("disabled");
+        }
+    }
 }
 
 function getCookie(name) {
@@ -82,10 +98,10 @@ function renderBoost(parent, boost) {
     div.setAttribute('id', `boost-holder-${boost.level}`);
     div.innerHTML = `
     <div class="boost-holder" id ="boost-holder">
-      <input type="image" class="money boost" onclick="buyBoost(${boost.level})">
-      <p> Level: <div id="boostLevel_${boost.level}">  ${boost.level} </div></p>
-      <p> Power: <div id="boostPower_${boost.level}">  ${boost.power} </div></p>
-      <p> Price: <div id="boostPrice_${boost.level}">  ${boost.price} </div></p>
+      <input type="image" src="https://w7.pngwing.com/pngs/775/465/png-transparent-arrow-green-arrow-gold-material-green-tea.png" class="money boost" alt="Boost" onclick="buyBoost(${boost.level})">
+      <p> Level: <span class="boostLevel" id="boostLevel_${boost.level}">${boost.level}</span></p>
+      <p> Power: +<span class="boostPower" id="boostPower_${boost.level}">${boost.power}</span> coins/click</p>
+      <p> Price: <span class="boostPrice" id="boostPrice_${boost.level}">${boost.price}</span> coins</p>
     </div>`;
     parent.appendChild(div);
 }

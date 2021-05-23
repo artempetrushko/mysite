@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from user_profile.models import MainCycle
 from user_profile.forms import RegistrationForm
@@ -9,16 +8,16 @@ def user_login(request):
         user = authenticate(request, username=request.POST["username"], password=request.POST["password"])
         if user is not None:
             login(request, user)
-            return (True, 'index', {})
+            return True, 'index', {}
         else:
-            return (False, 'login.html', {'invalid': True})
+            return False, 'login.html', {'invalid': True}
     else:
-        return (False, 'login.html', {'invalid': False})
+        return False, 'login.html', {'invalid': False}
 
 
 def user_logout(request):
     logout(request)
-    return ('login')
+    return 'login'
 
 
 def user_registration(request):
@@ -31,10 +30,10 @@ def user_registration(request):
             mainCycle.save()
             user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
             login(request, user)
-            return (True, 'index', {})
+            return True, 'index', {}
         else:
-            return (False, 'registration.html', {'form': form, 'invalid': True})
+            return False, 'registration.html', {'form': form, 'invalid': True}
 
     else:
         form = RegistrationForm()
-        return (False, 'registration.html', {'form': form, 'invalid': False})
+        return False, 'registration.html', {'form': form, 'invalid': False}

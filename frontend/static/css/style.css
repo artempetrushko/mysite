@@ -12,21 +12,37 @@
     opacity: 1;
 }
 
-.activities {
-    display: inline;
+.boost:disabled {
+    opacity: 0.3;
 }
 
-.boost-container {
-    display: inline;
+.boost{
+  height: 100px;
+  width: 150px;
 }
-
-.boost-buttons {
-    display: inline;
-}
-
-.activities {
+.boost-wrapper{
     display: flex;
     flex-direction: row;
+    flex: 1;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-left: 50px;
     justify-content: center;
-    position: relative;
+}
+
+.boost-holder{
+  width: 200px;
+  height: 300px;
+  background: cornflowerblue;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+p {
+    margin: 10px 0;
+    font-weight: bold;
 }

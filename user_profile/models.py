@@ -33,6 +33,7 @@ class Boost(models.Model):
         self.mainCycle.save()
         self.power *= 2
         self.price *= 2
+        self.save()
         return (self.mainCycle.clickPower,
                 self.mainCycle.coinsCount,
                 self.level,
