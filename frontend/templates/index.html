@@ -3,6 +3,9 @@
 <html lang="en" dir="ltr">
     <head>
         <meta charset="utf-8">
+        <script type="text/javascript">
+            DJANGO_STATIC_URL = '{{ STATIC_URL }}';
+        </script>
         <script src="{% static 'js/index.js' %}"></script>
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
         <title>Title </title>
@@ -11,13 +14,18 @@
         {% csrf_token %}
         <main>
             <div align="center">
-                <h1> Welcome, <div id="user">%user%</div></h1>
+                <h1> Welcome, <span id="user">%user%</span>!</h1>
                 <div class="logout"><a href="/logout">LOGOUT</a></div>
-                <h3>Your click power is <div id="clickPower">{{ mainCycle.clickPower }}</div></h3>
-                <h3> You have <div id="data">%coins%</div>coins!</h3>
-                <div class="activities">
-                    <input type="image" class="money" src="{% static 'images/money.png' %}" onclick="callClick()">
-                    <input type="image" class="money boost" src="{% static 'images/money boost.png' %}" onclick="buyBoost()">
+                <h2>Coins: <span id="data">%coins%</span></h2>
+                <h3>Click power: <span id="clickPower">%clickPower%</span></h3>
+                <input type="image" class="money" src="{% static 'images/money.png' %}" onclick="callClick()">
+                <div class="boost-wrapper" id="boost-wrapper">
+                    <div class="boost-holder" id="boost-holder">
+                        <input type="image" class="money boost" src="{% static 'images/money boost.png' %}" onclick="buyBoost(0)">
+                        <p> Level: <span class="boostLevel" id="boostLevel"> </span></p>
+                        <p> Power: +<span class="boostPower" id="boostPower"> </span> coins/click</p>
+                        <p> Price: <span class="boostPrice" id="boostPrice"> </span> coins</p>
+                    </div>
                 </div>
             </div>
         </main>
