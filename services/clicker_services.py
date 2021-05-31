@@ -27,6 +27,6 @@ def buy_boost(request):
     boostLevel = request.data['boost_level']
     cycle = MainCycle.objects.get(user=request.user)
     boost = Boost.objects.get_or_create(mainCycle=cycle, level=boostLevel)[0]
-    clickPower, coinsCount, level, price, power = boost.upgrade()
+    main_cycle, level, coins_count, price = boost.upgrade()
     boost.save()
-    return clickPower, coinsCount, level, price, power
+    return main_cycle, level, coins_count, price

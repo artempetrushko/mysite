@@ -16,11 +16,11 @@
     opacity: 0.3;
 }
 
-.boost{
+.boost {
   height: 100px;
   width: 150px;
 }
-.boost-wrapper{
+.boost-wrapper {
     display: flex;
     flex-direction: row;
     flex: 1;
@@ -30,7 +30,7 @@
     justify-content: center;
 }
 
-.boost-holder{
+.boost-holder {
   width: 200px;
   height: 300px;
   background: cornflowerblue;
@@ -40,6 +40,10 @@
   align-items: center;
   border-radius: 20px;
   margin-right: 10px;
+}
+
+.boost-holder.autoBoost {
+    background: green;
 }
 
 p {

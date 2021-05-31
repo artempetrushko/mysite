@@ -16,17 +16,19 @@ async function getUser(id){
     let boosts = await boostRequest.json();
     renderAllBoosts(boosts);
     checkPrices();
+    set_auto_click();
+    set_send_coins_interval();
 }
 
 async function callClick() {
-    let response = await fetch('/click/', {
+    let response = await fetch('/click/',{
         method: 'GET'
     });
     let answer = await response.json();
     document.getElementById("data").innerHTML = answer.coinsCount;
     if (answer.boosts)
-        renderAllBoosts(answer.boosts);
-    checkPrices();
+      renderAllBoosts(answer.boosts);
+      checkPrices();
 }
 
 function buyBoost(boost_level){
@@ -49,6 +51,7 @@ function buyBoost(boost_level){
     }).then(data => {
         document.getElementById("data").innerHTML = data['coinsCount'];
         document.getElementById("clickPower").innerHTML = data['clickPower'];
+        document.getElementById("autoClickPower").innerHTML = data['autoClickPower'];
         document.getElementById(`boostLevel_${boost_level}`).innerHTML = data['level'];
         document.getElementById(`boostPrice_${boost_level}`).innerHTML = data['price'];
         document.getElementById(`boostPower_${boost_level}`).innerHTML = data['power'];
@@ -95,13 +98,50 @@ function renderAllBoosts(boosts) {
 function renderBoost(parent, boost) {
     const div = document.createElement('div');
     div.setAttribute('class', 'boost-holder');
+    if (boost.boost_type === 0)
+        div.classList.add('autoBoost');
     div.setAttribute('id', `boost-holder-${boost.level}`);
     div.innerHTML = `
-    <div class="boost-holder" id ="boost-holder">
       <input type="image" src="https://w7.pngwing.com/pngs/775/465/png-transparent-arrow-green-arrow-gold-material-green-tea.png" class="money boost" alt="Boost" onclick="buyBoost(${boost.level})">
       <p> Level: <span class="boostLevel" id="boostLevel_${boost.level}">${boost.level}</span></p>
       <p> Power: +<span class="boostPower" id="boostPower_${boost.level}">${boost.power}</span> coins/click</p>
-      <p> Price: <span class="boostPrice" id="boostPrice_${boost.level}">${boost.price}</span> coins</p>
-    </div>`;
+      <p> Price: <span class="boostPrice" id="boostPrice_${boost.level}">${boost.price}</span> coins</p>`;
     parent.appendChild(div);
+}
+
+function set_auto_click() {
+    setInterval(function() {
+        const coins_counter = document.getElementById('data')
+        let coinsValue = parseInt(coins_counter.innerText)
+        const auto_click_power = document.getElementById('autoClickPower').innerText
+        coinsValue += parseInt(auto_click_power)
+        document.getElementById("data").innerHTML = coinsValue;
+    }, 1000)
+}
+
+function set_send_coins_interval() {
+    setInterval(function() {
+        const csrftoken = getCookie('csrftoken')
+        const coins_counter = document.getElementById('data').innerText
+
+        fetch('/set_maincycle/', {
+            method: 'POST',
+            headers: {
+                "X-CSRFToken": csrftoken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                coinsCount: coins_counter,
+            })
+        }).then(response => {
+            if (response.ok) {
+                return response.json()
+            } else {
+                return Promise.reject(response)
+            }
+        }).then(data => {
+            console.log('Coins count sended to server')
+            checkPrices()
+        }).catch(err => console.log(err))
+    }, 5000)
 }
